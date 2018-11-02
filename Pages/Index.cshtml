@@ -5,10 +5,40 @@
     ViewData["Title"] = "Home page";
 }
 
-<!-- HTML WILL GO HERE -->
-
+<h1>My Watchlist</h1>
+<div class = "container">
+    <div class = "col-md-6">
+        <table class = "table" id="watchlist"></table>
+    </div>
+</div>
 @section Scripts {
     <script>
-        // JAVASCRIPT CODE WILL GO HERE
+
+    $(function() {
+        loadData();
+    });
+
+    function loadData() {
+        $.ajax({
+            url:"/api/TVPrograms",
+            dataType: 'json',
+            contentType: 'application/json',
+            method: 'GET'
+        }).done(function(responseJSON, status, xhr) {
+            buildWatchList(responseJSON);
+        }).fail(function(xhr,status,error){
+            alert("Oh no! We couldn't find your shows. D:");
+        });
+    }
+
+    function buildWatchList(TVPrograms) {
+        //console.log("running buildwatchlist");
+        $("#watchlist").empty();
+        $("#watchlist").append('<tr> <th>Show</th> <th>Season</th> <th>Episode</th> </tr>')
+        $.each(TVPrograms, function (index, item) {
+            $("#watchlist").append('<tr> <td>' + item.title + "</td> <td>" + item.season + "</td> <td>" + item.episode + '</td> </tr>')
+        });
+    }
+
     </script>
 }
