@@ -9,5 +9,6 @@ namespace TVTracker.Models
                 : base(options)
         {
         }
+        public DbSet<TVTracker.Models.TVProgram> TVProgram { get; set; }
     }
 }
