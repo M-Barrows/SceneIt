@@ -15,44 +15,40 @@ namespace TVTracker.Models
                 // GATTUSMP: SAMPLE OF A SEED FILE THAT FIRST LOOKS FOR A DATABASE WITH DATA
                 //           IF NO DATA FOUND THEN DATA IS ADDED TO THE DATABASE
                 // // Look for any movies.
-                // if (context.Movie.Any())
-                // {
-                //     return;   // DB has been seeded
-                // }
+                if (context.TVProgram.Any())
+                {
+                    return;   // DB has been seeded
+                }
 
-                // context.Movie.AddRange(
-                //     new Movie
-                //     {
-                //         Title = "When Harry Met Sally",
-                //         ReleaseDate = DateTime.Parse("1989-2-12"),
-                //         Genre = "Romantic Comedy",
-                //         Price = 7.99M
-                //     },
+                context.TVProgram.AddRange(
+                    new TVProgram
+                    {
+                        Title = "Stranger Things",
+                        Season = 2,
+                        Episode = 1
+                    },
 
-                //     new Movie
-                //     {
-                //         Title = "Ghostbusters",
-                //         ReleaseDate = DateTime.Parse("1984-3-13"),
-                //         Genre = "Comedy",
-                //         Price = 8.99M
-                //     },
+                    new TVProgram
+                    {
+                        Title = "Orange Is The New Black",
+                        Season = 6,
+                        Episode = 13
+                    },
 
-                //     new Movie
-                //     {
-                //         Title = "Ghostbusters 2",
-                //         ReleaseDate = DateTime.Parse("1986-2-23"),
-                //         Genre = "Comedy",
-                //         Price = 9.99M
-                //     },
+                    new TVProgram
+                    {
+                        Title = "Jane The Virgin",
+                        Season = 5,
+                        Episode = 1
+                    },
 
-                //     new Movie
-                //     {
-                //         Title = "Rio Bravo",
-                //         ReleaseDate = DateTime.Parse("1959-4-15"),
-                //         Genre = "Western",
-                //         Price = 3.99M
-                //     }
-                // );
+                    new TVProgram
+                    {
+                        Title = "Saturday Night Live",
+                        Season = 43,
+                        Episode = 2
+                    }
+                );
                 context.SaveChanges();
             }
         }
