@@ -10,20 +10,20 @@
     <div class = "col-md-6">
         <table class = "table" id="watchlist"></table>
     </div>
-    <div class = "col-md-6">
+    <div class = "col-md-3">
         <form id="createProgramForm" class="form">
             <h4>Add a new show</h4>
             <div class="form-group">
                 <label for="title">Title</label>
-                <input type="text" class="form-control" id="title" placeholder="Title" />
+                <input type="text" class="form-control" id="title" />
             </div>                
             <div class="form-group">
                 <label for="season">Season</label>
-                <input type="number" class="form-control" id="season" placeholder="1" />
+                <input type="number" class="form-control" id="season" />
             </div>
             <div class="form-group">
                 <label for="episode">Episode</label>
-                <input type="number" class="form-control" id="episode" placeholder="1" />
+                <input type="number" class="form-control" id="episode" />
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
@@ -56,11 +56,22 @@
     function buildWatchList(TVPrograms) {
         //console.log("running buildwatchlist");
         $("#watchlist").empty();
-        $("#watchlist").append('<tr> <th>Show</th> <th>Season</th> <th>Episode</th> </tr>')
+        $("#watchlist").append('<tr> <th>Show</th> <th>Season</th> <th>Episode</th> <th> </th> <th> </th> </tr>')
         $.each(TVPrograms, function (index, item) {
-            $("#watchlist").append('<tr> <td>' + item.title + "</td> <td>" + item.season + "</td> <td>" + item.episode + '</td> </tr>')
+            $("#watchlist").append(
+                '<tr program-id = "' + item.id + '"> <td>' + item.title 
+                    + "</td> <td>" + item.season 
+                    + "</td> <td>" + item.episode 
+                    + '</td> <td> <button class = "btn btn-danger program-delete"> delete </button> </tr>'
+            )
         });
     }
+
+    $("#watchlist").on('click', 'button.program-delete', function(){
+        var id = $(this).parents("tr").attr('program-id');
+        deleteProgram(id);
+        return false;
+    })
 
     function createProgram() {
         var requestData = {
@@ -69,7 +80,7 @@
             episode: $("#episode").val()
         };
         $.ajax({
-            url:"/api/TVPrograms",
+            url:"/api/TVPrograms/",
             dataType: 'json',
             contentType: 'application/json',
             method: 'POST',
@@ -83,5 +94,18 @@
             alert("Whoops! We couldn't add your show to the list.");
         });
     };
+
+    function deleteProgram(id) {
+        $.ajax({
+            url:"/api/TVPrograms/" + id,
+            dataType: 'json',
+            contentType: 'application/json',
+            method: 'DELETE'
+        }).done(function(responseJSON, status, xhr){
+            loadData();
+        }).fail(function(xhr,status,error){
+            alert("Show not deleted. Try again.")
+        })
+    }
     </script>
 }
