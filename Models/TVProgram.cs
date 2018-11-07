@@ -15,7 +15,6 @@ namespace TVTracker.Models
         public string Title {get;set;}
         public int Season {get;set;}
         public int Episode {get;set;}
-        public DateTime? DateWatched {get;set;}
     }
 }
             
