@@ -12543,30 +12543,28 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Michael\\.nuget\\packages\\": {},
+    "C:\\Users\\MBarr\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "m:\\Libraries\\GitHub\\TVTracker\\TVTracker.csproj",
+      "projectUniqueName": "E:\\GitHub\\SceneIt\\TVTracker.csproj",
       "projectName": "TVTracker",
-      "projectPath": "m:\\Libraries\\GitHub\\TVTracker\\TVTracker.csproj",
-      "packagesPath": "C:\\Users\\Michael\\.nuget\\packages\\",
-      "outputPath": "m:\\Libraries\\GitHub\\TVTracker\\obj\\",
+      "projectPath": "E:\\GitHub\\SceneIt\\TVTracker.csproj",
+      "packagesPath": "C:\\Users\\MBarr\\.nuget\\packages\\",
+      "outputPath": "E:\\GitHub\\SceneIt\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\Michael\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Users\\MBarr\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp2.1"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {

@@ -24,7 +24,7 @@ namespace TVTracker.Controllers
         [HttpGet]
         public IEnumerable<TVProgram> GetTVProgram()
         {
-            return _context.TVProgram;
+            return _context.TVProgram.OrderBy(x => x.Title).ThenByDescending(x => x.Season).ThenByDescending(x=>x.Episode).ToList();
         }
 
         // GET: api/TVPrograms/5
