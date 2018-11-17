@@ -6,12 +6,36 @@
 }
 
 <h1>My Watchlist</h1>
-<div class = "container">
+<div id="App" class = "container">
     <div class = "col-md-6">
-        <table class = "table" id="watchlist"></table>
+       
+        <table class = "table" id="watchlist1">
+            <tr> <th>Show</th> <th>Season</th>  <th>Episode</th> <th>Delete</th> </tr>
+            <tr v-for = "index in items" v-bind:id="index.id">
+                <td>{{index.title}}</td> 
+                <td>
+                    <button class = "btn"v-on:click = "editProgram(index.id, index.title, index.season - 1, index.episode)"> 
+                        <span class="glyphicon glyphicon-minus"></span> 
+                    </button>{{index.season}}<button class = "btn" v-on:click = "editProgram(index.id, index.title, index.season + 1, index.episode)"> 
+                        <span class="glyphicon glyphicon-plus"></span> 
+                    </button>
+                </td> 
+                <td>
+                    <button class = "btn" v-on:click = "editProgram(index.id, index.title, index.season, index.episode - 1)"> 
+                        <span class="glyphicon glyphicon-minus"></span> 
+                    </button>{{index.episode}}<button class = "btn" v-on:click = "editProgram(index.id, index.title, index.season, index.episode + 1)"> 
+                        <span class="glyphicon glyphicon-plus"></span> 
+                    </button>
+                </td> 
+                <td><button class = "btn btn-danger" v-on:click = "deleteProgram(index.id)"> 
+                    <span class="glyphicon glyphicon-trash"></span>
+                </button></td>
+                </tr>
+        </table>
+
     </div>
     <div class = "col-md-3">
-        <form id="createProgramForm" class="form">
+        <form id="createProgramForm" class="form" v-on:submit.stop.prevent = "createProgram">
             <h4>Add a new show</h4>
             <div class="form-group">
                 <label for="title">Title</label>
@@ -32,13 +56,130 @@
 @section Scripts {
     <script>
 
-    $(function() {
-        loadData();
-        $("#createProgramForm").submit(function(){
-            createProgram();
-            return false;
-        })
+    var ItemsVue = new Vue({
+        el: '#App',
+        data: {
+            items: [],
+            createForm: {
+                title: '',
+                season: 0,
+                episode: 0
+            },
+            editSeasonObject: {
+                id: 0,
+                title: '',
+                season: 0,
+                episode: 0,
+                direction:''
+            },
+            editEpisodeObject: {
+                id: 0,
+                title: '',
+                season: 0,
+                episode: 0,
+                direction:''
+            }
+        },
+        mounted: function () {
+            var self = this;
+            $.ajax({
+                url: '/api/TVPrograms',
+                dataType: 'json',
+                contentType: 'application/json',
+                method: 'GET',
+                success: function (data) {
+                    self.items = data;
+                },
+                error: function (error) {
+                    console.log(error);
+                    alert("Oh no! We couldn't find your shows. D:");
+                }
+            });
+        },
+        methods: { 
+            getShows: function() {
+                var self = this;
+                $.ajax({
+                    url: '/api/TVPrograms',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    method: 'GET',
+                    success: function (data) {
+                        self.items = data;
+                    },
+                    error: function (error) {
+                        console.log(error);
+                        alert("Oh no! We couldn't find your shows. D:");
+                    }
+                });
+            },
+            createProgram: function () {
+                var self = this;
+                self.createForm.title = $("#title").val();
+                self.createForm.season = $("#season").val();
+                self.createForm.episode = $("#episode").val();
+                $.ajax({
+                    url:"/api/TVPrograms/",
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    method: 'POST',
+                    data: JSON.stringify(self.createForm),
+                    success: function (data){
+                        self.getShows();
+                        $("#title").val("");
+                        $("#season").val("");
+                        $("#episode").val("");
+                    },
+                    error: function (error) {
+                        console.log(error);
+                        alert("Whoops! We couldn't add your show to the list.");
+                    }
+                });
+            },
+            deleteProgram: function(id) {
+                var self = this;
+                programID = event.currentTarget.id.substr(4);
+                console.log(id);
+                $.ajax({
+                    url:"/api/TVPrograms/" + id,
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    method: 'DELETE',
+                    success: function(data){
+                        self.getShows();
+                    },
+                    error: function(error){
+                        alert("Show not deleted. Try again.");
+                    }
+                });
+                
+            },
+            editProgram: function(id, title, season, episode) {
+                var self = this;
+                var requestData = {
+                    id: id,
+                    title: title,
+                    season: season,
+                    episode: episode
+                };
+                $.ajax({
+                    url: '/api/TVPrograms/' + id,
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    method: 'PUT',
+                    data: JSON.stringify(requestData),
+                    success: function(data){
+                        self.getShows();
+                    },
+                    error: function(error){
+                        alert("The show could not be updated.")
+                    }
+                });
+            },
+
+        }     
     });
+
 
     function loadData() {
         $.ajax({
@@ -50,22 +191,6 @@
             buildWatchList(responseJSON);
         }).fail(function(xhr,status,error){
             alert("Oh no! We couldn't find your shows. D:");
-        });
-    }
-
-    function buildWatchList(TVPrograms) {
-        //console.log("running buildwatchlist");
-        $("#watchlist").empty();
-        $("#watchlist").append('<tr> <th>Show</th> <th>Season</th>  <th>Episode</th> <th>delete</th> </tr>')
-        $.each(TVPrograms, function (index, item) {
-            $("#watchlist").append(
-                '<tr program-id = "' + item.id + '"> <td class = "title-cell">' + item.title 
-                    + '</td>'
-                    + '<td class = "season-cell"><button class = "btn season-down"> <span class="glyphicon glyphicon-minus"></span> </button>' + item.season 
-                    + '<button class = "btn season-up"> <span class="glyphicon glyphicon-plus"></span> </button></td>' 
-                    + '</td> <td class = "episode-cell"><button class = "btn episode-down"> <span class="glyphicon glyphicon-minus"></span> </button>' + item.episode
-                    + '<button class = "btn episode-up"> <span class="glyphicon glyphicon-plus"></span> </button></td> <td> <button class = "btn btn-danger program-delete"> <span class="glyphicon glyphicon-trash"></span> </button></td>  </tr>'
-            )
         });
     }
 
